@@ -8,6 +8,8 @@ format:
     number-sections: true
     embed-resources: true
     output-file: index 
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Quarto
@@ -29,24 +31,44 @@ You can add options to executable code like this
 2 * 2
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+# Modelo lineal
 
-# Como usar cuarto?
+## Importar datos
 
-## Fuentes
+```{r}
 
--   Negrita: **esta es una fuente negrita**
--   Cursiva: *Solanum tuberosum*
+library(readxl)
+fb <- LA_MOLINA_2014_POTATO_WUE_FB_1_ <- read_excel("LA MOLINA 2014 POTATO WUE (FB) (1).xlsx", 
+                                              sheet = "fb")
+View(fb)
 
-## Formulas matemàticas
 
-Este es el area de una circunferencia $Area_{c}=pi\cdot r^2$
+```
 
-Esta es una formula cualquiera $$\frac{\left(2x-1\right)^2-1}{4}=k$$
+# Modelo lineal
 
-# Mi primera página web.
+```{r}
 
-1.  Tener mi proyecto
-2.  Conectar mi proyecto a GitHub
-3.  Tener un archivo en formato html llamado index.html
-4.  Activar GitHub pages
+modelo <- lm(formula = lfa ~ bloque + geno + riego + riego*geno 
+             , data = fb) 
+
+anova (modelo) 
+
+str (fb)
+
+```
+
+# box plot
+
+```{r}
+
+library(ggplot2)
+
+ggplot(fb, aes(x = geno, y = lfa, fill = riego)) +
+  geom_boxplot() +
+  labs(x = "Genotipo", y = "LFA", title = "Boxplot de LFA por Genotipo y Riego") +
+  theme_minimal()
+
+
+
+```

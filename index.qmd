@@ -1,0 +1,49 @@
+---
+title: "mi 2da pagina web"
+author: "Jhon Edler"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+
+# LIBRO DE CAMPO PARA ---> Diseño completamente al azar, DCA
+install.packages("agricolae") #instalar el paquete
+library(agricolae) 
+#llamado de librerias
+mis_tratamientos <-c("CIP-101","CIP-201","CIP-301",
+        "CIP-401","CIP-501")
+#tratamientos
+outdesign <- design.crd(trt=mis_tratamientos,r=4,serie=2,seed=1284,
+              kinds="default") 
+#Diseño de libro de campo
+mi_dca <-outdesign$book 
+#extraer libro de campo
+View (mi_dca)
+print(matrix(mi_dca$mis_tratamientos,byrow=TRUE, 
+             ncol=5))
+print(matrix(mi_dca$plots,byrow=TRUE, ncol=5))
+write.table(mi_dca, "~/UNTRM/2023-I/Fruticultura/libro_de_campo.txt",
+            sep= "\t")
+```

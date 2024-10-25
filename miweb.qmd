@@ -80,14 +80,14 @@ library(agricolae)
 library(tidyverse)
 
 
-# Realizar una comparación de medias para el factor geno
+#  comparación de medias para el factor geno
 cat("Comparación de medias para geno:\n")
 tukey_geno <- HSD.test(modelo, "geno", group = TRUE)
 print(tukey_geno) 
 
 
 
-# Realizar una comparación de medias para el factor riego
+# comparación de medias para el factor riego
 cat("Comparación de medias para riego:\n")
 tukey_riego <- HSD.test(modelo, "riego", group = TRUE)
 print(tukey_riego)

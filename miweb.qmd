@@ -72,3 +72,97 @@ ggplot(fb, aes(x = geno, y = lfa, fill = riego)) +
 
 
 ```
+
+## comparación de medias 
+
+```{r}
+library(agricolae)  
+library(tidyverse)
+
+
+# Realizar una comparación de medias para el factor geno
+cat("Comparación de medias para geno:\n")
+tukey_geno <- HSD.test(modelo, "geno", group = TRUE)
+print(tukey_geno) 
+
+
+
+# Realizar una comparación de medias para el factor riego
+cat("Comparación de medias para riego:\n")
+tukey_riego <- HSD.test(modelo, "riego", group = TRUE)
+print(tukey_riego)
+
+
+# para la interaccion geno:riego
+cat("Comparación de medias para la interacción geno:riego:\n")
+tukey_interaccion <- HSD.test(modelo, c("riego", "geno"), group = TRUE)
+print(tukey_interaccion) 
+
+str (tukey_interaccion) 
+
+mc <- tukey_interaccion$groups %>% 
+  rownames_to_column("trat") %>% 
+  separate(trat, c("riego", "variedad")) 
+
+
+str (mc)
+```
+
+## grafico 
+
+```{r}
+
+library(ggplot2)
+
+# Crear el gráfico de barras con ggplot2
+ggplot(mc, aes(x = variedad, y = lfa, fill = riego)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) +   # Barras agrupadas por riego
+  geom_text(aes(label = groups), position = position_dodge(0.9), vjust = -0.5) + # Etiquetas de los grupos sobre las barras
+  labs(title = "Producción por Variedad y Riego", x = "Variedad", y = "LFA") +   # Etiquetas de los ejes y título
+  scale_fill_manual(values = c("irrigado" = "tomato", "sequia" = "turquoise3")) + # Colores personalizados para riego
+  theme_minimal() +  # Tema minimalista
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotar etiquetas del eje X
+
+```
+
+## comparacion de medias: emmeans  
+
+```{r}
+
+library(emmeans)
+ 
+mc <- emmeans(modelo,~ riego*geno)
+mc <- emmeans(modelo, ~ riego|geno) 
+
+mc <- emmeans(modelo, ~ riego|geno) %>% 
+  as.data.frame()
+
+mc
+
+```
+
+### plot
+
+```{r}
+
+ggplot(mc, aes(x = geno, y = emmean, fill = riego)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  # geom_text(aes(label = emmean), position = position_dodge(0.9), vjust = -0.5) +
+  labs(x = "Variedad", y = "LFA", fill = "Riego") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
